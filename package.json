@@ -1,0 +1,25 @@
+{
+  "name": "import-sorter",
+  "version": "1.0.0",
+  "description": "this project sorts your imports by length",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blendmehani/import-sorter.git"
+  },
+  "author": "Blend Mehani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blendmehani/import-sorter/issues"
+  },
+  "homepage": "https://github.com/blendmehani/import-sorter#readme",
+  "devDependencies": {
+    "@types/node": "^20.5.7"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
