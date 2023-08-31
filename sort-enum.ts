@@ -7,8 +7,8 @@ export enum FileType {
 }
 
 export enum Message {
-    SUCCESS_FILE = '',
-    SUCCESS_FILES = '',
+    SUCCESS_FILE = 'Your file was successfully sorted!',
+    SUCCESS_FILES = 'Your files were successfully sorted!',
     QUESTION_FILE = 'Do you want your file to be sorted ASC or DESC? (default is DESC):',
     QUESTION_FILES = 'Do you want your files to be sorted ASC or DESC? (default is DESC): ',
 }

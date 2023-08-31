@@ -2,28 +2,29 @@ import fs from 'fs';
 import path from 'path';
 import process from 'process';
 import readline from 'readline'
-import {stdin as input, stdout as output} from 'node:process';
 import {FileType, Message, Sorting} from "./sort-enum";
+import {stdin as input, stdout as output} from 'node:process';
+
 
 const pathArgument = process.argv[2];
 const directoryPath = path.join(path.resolve() + (pathArgument ? '/' + pathArgument : '/src'));
-const question = pathArgument.includes(FileType.TS)? Message.QUESTION_FILE : Message.QUESTION_FILES;
-
+const question = pathArgument?.includes(FileType.TS)? Message.QUESTION_FILE : Message.QUESTION_FILES;
 
 const rl = readline.createInterface({ input, output });
 rl.question(question, (answer) => {
-    let sorting = Sorting.DESC;
-    if (answer === 'ASC') sorting = Sorting.ASC;
+    const sorting = (answer === Sorting.ASC) ? Sorting.ASC : Sorting.DESC
     readFilesRecursively(directoryPath, sorting);
-    rl.close()
-    console.info(pathArgument.includes(FileType.TS)? Message.SUCCESS_FILE : Message.SUCCESS_FILES)
+    rl.close();
+    let message = Message.SUCCESS_FILES;
+    if (pathArgument?.includes(FileType.TS))
+        message = Message.SUCCESS_FILE;
+    console.info(message);
 });
 
 
 const rewriteFile = (filePath: string, sorting = 'DESC') => {
     const file = fs.readFileSync(filePath).toString('utf-8');
     const seperatedFile = file.split(';');
-
     const imports = [];
     const valuesLength: number[] = [];
 
@@ -52,29 +53,26 @@ const rewriteFile = (filePath: string, sorting = 'DESC') => {
         )
             sortedImports[index] = sortedImports[index].replace(/(\r\n|\n|\r)/, '');
     }
-
     let concatenatedImports = '';
+
     for (const [index, value] of sortedImports.entries()) {
         let addValue: string;
         if (index === 0) addValue = value;
         else addValue = '\n' + value;
         concatenatedImports += addValue;
     }
-
     const modifiedFile = concatenatedImports + removedImportsFile;
-
     try {
         fs.writeFileSync(filePath, modifiedFile);
     } catch (err) {
-        console.log(err);
+        throw new Error(err);
     }
 }
 
 
-
 const readFilesRecursively = (directoryPath: string, sorting: string) => {
     let files: string[];
-    if (pathArgument.includes(FileType.TS)) {
+    if (pathArgument?.includes(FileType.TS)) {
         rewriteFile(directoryPath, sorting);
         return;
     }
