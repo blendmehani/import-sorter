@@ -2,25 +2,25 @@ import fs from 'fs';
 import path from 'path';
 import process from 'process';
 import readline from 'readline'
-import { stdin as input, stdout as output } from 'node:process';
+import {stdin as input, stdout as output} from 'node:process';
+import {FileType, Message, Sorting} from "./sort-enum";
 
-
-const directoryPath = path.join(path.resolve() + (process?.argv[2] ? process.argv[2] : '/src'));
-const question = 'Do you want your files to be sorted ASC (yes) DESC (no)? ';
+const pathArgument = process.argv[2];
+const directoryPath = path.join(path.resolve() + (pathArgument ? '/' + pathArgument : '/src'));
+const question = pathArgument.includes(FileType.TS)? Message.QUESTION_FILE : Message.QUESTION_FILES;
 
 
 const rl = readline.createInterface({ input, output });
 rl.question(question, (answer) => {
-    let sorting = 'DESC';
-    if (answer === 'yes') sorting = 'ASC';
+    let sorting = Sorting.DESC;
+    if (answer === 'ASC') sorting = Sorting.ASC;
     readFilesRecursively(directoryPath, sorting);
     rl.close()
-    console.log('Your file has been sorted')
+    console.info(pathArgument.includes(FileType.TS)? Message.SUCCESS_FILE : Message.SUCCESS_FILES)
 });
 
 
 const rewriteFile = (filePath: string, sorting = 'DESC') => {
-    // const filePath = path.join(path.resolve() + process.argv[2]);
     const file = fs.readFileSync(filePath).toString('utf-8');
     const seperatedFile = file.split(';');
 
@@ -40,7 +40,7 @@ const rewriteFile = (filePath: string, sorting = 'DESC') => {
     const removedImportsFile = file.slice(lastIndex);
 
     const sortedImports = imports.sort((a, b) => {
-        if (sorting === 'DESC') return b.length - a.length;
+        if (sorting === Sorting.DESC) return b.length - a.length;
         else return a.length - b.length;
     });
 
@@ -73,14 +73,19 @@ const rewriteFile = (filePath: string, sorting = 'DESC') => {
 
 
 const readFilesRecursively = (directoryPath: string, sorting: string) => {
-    const files = fs.readdirSync(directoryPath);
+    let files: string[];
+    if (pathArgument.includes(FileType.TS)) {
+        rewriteFile(directoryPath, sorting);
+        return;
+    }
+    else files = fs.readdirSync(directoryPath);
 
-    files.forEach(file => {
+    files.forEach((file: string) => {
         const filePath = path.join(directoryPath, file);
         const fileStats = fs.statSync(filePath);
 
         if (fileStats.isFile()) {
-            if (filePath.includes('.ts'))
+            if (filePath.includes(FileType.TS))
                 rewriteFile(filePath, sorting);
         } else if (fileStats.isDirectory()) {
             readFilesRecursively(filePath, sorting);
