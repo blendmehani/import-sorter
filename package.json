@@ -1,10 +1,14 @@
 {
-  "name": "import-sorter",
-  "version": "1.0.0",
+  "name": "sort-file-imports",
+  "version": "1.1.0",
   "description": "this project sorts your imports by length",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": {
+    "sort-files": "dist/index.js"
+  },
   "scripts": {
-    "start": "ts-node index.ts"
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +24,7 @@
     "@types/node": "^20.5.7"
   },
   "dependencies": {
+    "sort-file-imports": "^1.0.0",
     "ts-node": "^10.9.1"
   }
 }

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
@@ -29,7 +30,7 @@ const rewriteFile = (filePath: string, sorting = 'DESC') => {
     const valuesLength: number[] = [];
 
     seperatedFile.forEach((value) => {
-        if (value.includes('import')) {
+        if (value.includes('import') && value.includes('from')) {
             imports.push(value + ';');
             valuesLength.push(value.length + 1);
         }
