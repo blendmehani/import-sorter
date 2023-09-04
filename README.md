@@ -9,7 +9,7 @@ Spend less time on manual sorting and more on productive coding.
 You can use sort-file-imports by providing a directory or a single TypeScript file as a parameter. If no parameter is provided, the tool will default to using the "src" directory.
 Additionally, the tool will prompt you to choose between ascending (ASC) or descending (DESC) sorting, with descending being the default option.
 
-You can install the package
+You can install the package:
 ```bash
 $ npm install sort-file-imports
 ```
